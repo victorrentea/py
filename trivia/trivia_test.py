@@ -33,8 +33,7 @@ from unittest import TestCase
 
 # for i from 1 to 100
 for seed in range(1, 1000):
-    print("seed: ", seed)
     expected = capture_output(lambda: play_game(GameOriginal(), seed))
     actual = capture_output(lambda: play_game(Game(), seed))
     TestCase.maxDiff = None
-    TestCase().assertMultiLineEqual(expected.getvalue(), actual.getvalue())
+    TestCase().assertMultiLineEqual(expected.getvalue(), actual.getvalue(), f"Failed for seed: {seed}")
