@@ -22,10 +22,6 @@ class QuestionType(Enum):
     ROCK = "Rock"
 
 
-def generate_questions(e):
-    return [f"{e.value} Question {i}" for i in range(50)]
-
-
 class Game:
     def __init__(self):
         self.players: list[Player] = []
@@ -35,7 +31,7 @@ class Game:
         self.player_index = 0
         self.is_getting_out_of_penalty_box = False
 
-        self.questions = {e: generate_questions(e) for e in QuestionType}
+        self.questions = {e: [f"{e.value} Question {i}" for i in range(50)] for e in QuestionType}
 
     def is_playable(self):
         return self.how_many_players >= 2
