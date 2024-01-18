@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+from enum import Enum
+
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -12,25 +15,27 @@ class Player:
             self.place = self.place - 12
 
 
+class QuestionType(Enum):
+    POP = "Pop"
+    SCIENCE = "Science"
+    SPORTS = "Sports"
+    ROCK = "Rock"
+
+
+def generate_questions(e):
+    return [f"{e.value} Question {i}" for i in range(50)]
+
+
 class Game:
     def __init__(self):
         self.players: list[Player] = []
         self.purses = [0] * 6
         self.in_penalty_box = [0] * 6
 
-        self.pop_questions = []
-        self.science_questions = []
-        self.sports_questions = []
-        self.rock_questions = []
-
-        self.current_player_index = 0
+        self.player_index = 0
         self.is_getting_out_of_penalty_box = False
 
-        for i in range(50):
-            self.pop_questions.append("Pop Question %s" % i)
-            self.science_questions.append("Science Question %s" % i)
-            self.sports_questions.append("Sports Question %s" % i)
-            self.rock_questions.append("Rock Question %s" % i)
+        self.questions = {e: generate_questions(e) for e in QuestionType}
 
     def is_playable(self):
         return self.how_many_players >= 2
@@ -43,103 +48,92 @@ class Game:
         print(player_name + " was added")
         print("They are player number %s" % len(self.players))
 
-        return True
-
     @property
     def how_many_players(self):
         return len(self.players)
 
     def roll(self, roll):
-        print("%s is the current player" % self.players[self.current_player_index].name)
+        print("%s is the current player" % self.current_player.name)
         print("They have rolled a %s" % roll)
 
-        if self.in_penalty_box[self.current_player_index]:
+        if self.in_penalty_box[self.player_index]:
             if roll % 2 != 0:
                 self.is_getting_out_of_penalty_box = True
 
-                print("%s is getting out of the penalty box" % self.players[self.current_player_index].name)
-                player = self.current_player()
+                print("%s is getting out of the penalty box" % self.current_player.name)
+                player = self.current_player
                 player.advance(roll)
 
-                print(self.current_player().name + '\'s new location is ' + str(self.players[self.current_player_index].place))
-                print("The category is %s" % self._current_category)
-                self._ask_question()
+                print(self.current_player.name + '\'s new location is ' + str(self.current_player.place))
+                print("The category is %s" % self.current_category.value)
+                self.ask_question()
             else:
-                print("%s is not getting out of the penalty box" % self.players[self.current_player_index].name)
+                print("%s is not getting out of the penalty box" % self.current_player.name)
                 self.is_getting_out_of_penalty_box = False
         else:
-            player = self.current_player()
+            player = self.current_player
             player.advance(roll)
 
-            print(self.players[self.current_player_index].name + \
-                  '\'s new location is ' + \
-                  str(self.players[self.current_player_index].place))
-            print("The category is %s" % self._current_category)
-            self._ask_question()
-
-    def current_player(self):
-        return self.players[self.current_player_index]
-
-    def _ask_question(self):
-        if self._current_category == 'Pop': print(self.pop_questions.pop(0))
-        if self._current_category == 'Science': print(self.science_questions.pop(0))
-        if self._current_category == 'Sports': print(self.sports_questions.pop(0))
-        if self._current_category == 'Rock': print(self.rock_questions.pop(0))
+            print(self.current_player.name + '\'s new location is ' + str(self.current_player.place))
+            print("The category is %s" % self.current_category.value)
+            self.ask_question()
 
     @property
-    def _current_category(self):
-        if self.players[self.current_player_index].place == 0: return 'Pop'
-        if self.players[self.current_player_index].place == 4: return 'Pop'
-        if self.players[self.current_player_index].place == 8: return 'Pop'
-        if self.players[self.current_player_index].place == 1: return 'Science'
-        if self.players[self.current_player_index].place == 5: return 'Science'
-        if self.players[self.current_player_index].place == 9: return 'Science'
-        if self.players[self.current_player_index].place == 2: return 'Sports'
-        if self.players[self.current_player_index].place == 6: return 'Sports'
-        if self.players[self.current_player_index].place == 10: return 'Sports'
-        return 'Rock'
+    def current_player(self):
+        return self.players[self.player_index]
+
+    def ask_question(self):
+        print(self.questions[self.current_category].pop(0))
+
+    @property
+    def current_category(self) -> QuestionType:
+        mod_to_type = {
+            0: QuestionType.POP,
+            1: QuestionType.SCIENCE,
+            2: QuestionType.SPORTS,
+            3: QuestionType.ROCK
+        }
+        return mod_to_type[(self.current_player.place % 4)]
 
     def was_correctly_answered(self):
-        if self.in_penalty_box[self.current_player_index]:
+        if self.in_penalty_box[self.player_index]:
             if self.is_getting_out_of_penalty_box:
                 print('Answer was correct!!!!')
-                self.purses[self.current_player_index] += 1
-                print(self.players[self.current_player_index].name + ' now has ' + str(
-                    self.purses[self.current_player_index]) + ' Gold Coins.')
+                self.purses[self.player_index] += 1
+                print(self.current_player.name + ' now has ' + str(
+                    self.purses[self.player_index]) + ' Gold Coins.')
 
-                winner = self._did_player_win()
-                self.current_player_index += 1
-                if self.current_player_index == len(self.players): self.current_player_index = 0
+                winner = self.__did_player_win()
+                self.next_player()
 
                 return winner
             else:
-                self.current_player_index += 1
-                if self.current_player_index == len(self.players): self.current_player_index = 0
+                self.next_player()
                 return True
-
-
-
         else:
 
             print("Answer was corrent!!!!")
-            self.purses[self.current_player_index] += 1
-            print(self.players[self.current_player_index].name + ' now has ' + str(
-                self.purses[self.current_player_index]) + ' Gold Coins.')
+            self.purses[self.player_index] += 1
+            print(self.current_player.name + ' now has ' + str(
+                self.purses[self.player_index]) + ' Gold Coins.')
 
-            winner = self._did_player_win()
-            self.current_player_index += 1
-            if self.current_player_index == len(self.players): self.current_player_index = 0
+            winner = self.__did_player_win()
+            self.next_player()
 
             return winner
 
     def wrong_answer(self):
         print('Question was incorrectly answered')
-        print(self.players[self.current_player_index].name + " was sent to the penalty box")
-        self.in_penalty_box[self.current_player_index] = True
+        print(self.current_player.name + " was sent to the penalty box")
+        self.in_penalty_box[self.player_index] = True
 
-        self.current_player_index += 1
-        if self.current_player_index == len(self.players): self.current_player_index = 0
+        self.next_player()
         return True
 
-    def _did_player_win(self):
-        return not (self.purses[self.current_player_index] == 6)
+    def next_player(self):
+        self.player_index += 1
+        if self.player_index == len(self.players):
+            self.player_index = 0
+
+    def __did_player_win(self):
+        return self.purses[self.player_index] != 6
