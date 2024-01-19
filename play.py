@@ -29,17 +29,13 @@ coll=[]
 if (x and coll):
     print("x and coll")
 
-
+# @dataclass(unsafe_hash=True)
 class X:
-    def __init__(self):
-        self.a = 1
-        self.b = 2
+    # a: int
+    def __init__(self, a):
+        self.a = a
 
-    def __str__(self):
-        return f"{self.a} {self.b}"
-map = {}
-map[X()] = 1
-
-map[X()] = 2
-
-print(map)
+set = set()
+set.add(X(1))
+set.add(X(1))
+print(set)

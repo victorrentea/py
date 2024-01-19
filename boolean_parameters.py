@@ -19,12 +19,13 @@ def use_case_323(id, task):
     big_ugly_method(id, task)
 
 
-def big_ugly_method(store_id, task):
+def big_ugly_method(store_id, task, cr323=False):
     print("Donkey Logic 1 ", task, " and ", store_id)
     print(task)
     print("Donkey Logic 3 ", task)
 
-    # print("Logic just for CR#323 : ", task)
+    if cr323:
+        print("Logic just for CR#323 : ", task)
 
     print("Sheep Logic 1 ", store_id)
     print("Sheep Logic 2 ", store_id)
