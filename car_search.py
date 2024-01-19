@@ -1,7 +1,3 @@
-def intervals_intersect(start1, end1, start2, end2):
-    return start1 <= end2 and start2 <= end1
-
-
 class CarSearchCriteria:
     def __init__(self, start_year, end_year, make):
         self.make = make
@@ -45,16 +41,26 @@ class CarModel:
     def __str__(self):
         return f"CarModel{{make='{self.make}', model='{self.model}'}}"
 
-    def filter_car_models(criteria, car_models):
-        matches = [car_model for car_model in car_models
-                   if intervals_intersect(
-                criteria.get_start_year(), criteria.get_end_year(),
-                car_model.get_start_year(), car_model.get_end_year())]
-        print("More filtering logic ...")
-        return matches
 
-    def apply_capacity_filter():
-        print(intervals_intersect(1000, 1600, 1250, 2000))
+def filter_car_models(criteria: CarSearchCriteria, car_models: list[CarModel]):
+    def years_match(car_model, criteria):
+        return intervals_intersect(
+            criteria.get_start_year(), criteria.get_end_year(),
+            car_model.get_start_year(), car_model.get_end_year())
+
+    matches = [car_model for car_model in car_models if years_match(car_model, criteria)]
+    print("More filtering logic ...")
+    return matches
+
+
+
+
+def apply_capacity_filter():
+    print(intervals_intersect(1000, 1600, 1250, 2000))
+
+
+def intervals_intersect(start1: int, end1: int, start2: int, end2: int):
+    return start1 <= end2 and start2 <= end1  # copiata cu grije din StackOverflow
 
 
 class Alta:
@@ -70,9 +76,6 @@ class CarModelMapper:
         dto.start_year = car_model.get_start_year()
         dto.end_year = car_model.get_end_year()
         return dto
-
-    def from_dto(self, dto):
-        return CarModel(dto.make, dto.model, dto.start_year, dto.end_year)
 
 
 class CarModelDTO:
