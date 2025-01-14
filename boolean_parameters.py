@@ -19,6 +19,7 @@ def red_method(id, task):
 
 
 def use_case_323(id, task):
+    # Task(id=1, started=False)
     # TODO The shared called method must execute logic specific for my use-case #323
     big_ugly_method(id, task, lambda x: print("My Logic: ", x))
 

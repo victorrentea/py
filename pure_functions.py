@@ -20,7 +20,7 @@ class Pure:
         self.coupon_repo.mark_used_coupons(customer_id, used_coupons)
         return final_prices
 
-        def resolve_prices(self, internal_prices, products):
+    def resolve_prices(self, internal_prices, products):
         return [internal_prices.get(product.id) or self.third_party_prices_api.fetch_price(product.id)
                 for product in products]
 
