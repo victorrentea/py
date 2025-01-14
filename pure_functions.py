@@ -7,23 +7,34 @@ class Pure:
 
     def compute_prices(self, customer_id, product_ids, internal_prices):
         customer = self.customer_repo.find_by_id(customer_id)
-        products = self.product_repo.find_all_by_id(product_ids)
+        products = self.product_repo.find_all_by_id(product_ids) # fetch many products at once
 
-        used_coupons = []
-        final_prices = {}
-        for product in products:
-            price = internal_prices.get(product.id)
-            if price is None:
-                price = self.third_party_prices_api.fetch_price(product.id)
-            for coupon in customer.coupons:
-                if coupon.auto_apply and coupon.is_applicable_for(product) and coupon not in used_coupons:
-                    price = coupon.apply(price, product)
-                    used_coupons.append(coupon)
-            final_prices[product.id] = price
+        product_prices = [internal_prices.get(product.id) or self.third_party_prices_api.fetch_price(product.id)
+                          for product in products]
+
+        # in general e dubios sa returnezi mai multe valori dintr-o functie. poti incalca principiul single responsibility
+        final_prices, used_coupons = self.apply_coupons(products, customer.coupons, product_prices)
 
         self.coupon_repo.mark_used_coupons(customer_id, used_coupons)
         return final_prices
 
+    # class {}
+
+    # functie pura, usor de testat (fara mockuri) si de inteles (fara legaturi externe, fara changeuri de stare)
+    def apply_coupons(self, products, coupons, product_prices):
+        used_coupons = []
+        final_prices = {}
+        for product in products:
+            price = product_prices[product.id]
+            for coupon in coupons:
+                if coupon.auto_apply and coupon.is_applicable_for(product) and coupon not in used_coupons:
+                    price = coupon.apply(price, product)
+                    used_coupons.append(coupon)
+            final_prices[product.id] = price
+        return final_prices, used_coupons
+
+
+# vom extrage complexitatea principala a codului intr-o fucntie pura, usor de testat si inteles.
 
 
 class Repository:

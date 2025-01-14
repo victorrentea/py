@@ -36,11 +36,12 @@ class One:
         self.two = two
 
     def f(self):
-        return 2 * self.two.g(R(3))
+        self.two.gg(1, R(1))  # vrea 3  nou
+        return 2 * self.two.gg(1, R(3))  # vrea 1
 
 
 class Two:
-    def g(self, r):
+    def gg(self, x, r):
         b = 2
         print(f"b={b}")
         return 1 + b + r.x()
@@ -49,15 +50,23 @@ class Two:
         print(f"b={987}")
 
 
+
+
+
 def loop():
     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    ssq = 0
-    for number in numbers:
-        if number % 2 == 0:
-            ssq += number * number
+
+    # ssq = 0
+    # for number in numbers:
+    #     if number % 2 == 0:
+    #         ssq += number * number
+
+    ssq = sum([number * number for number in numbers if number % 2 == 0])
+
     print(sqrt(ssq))
 
 
 if __name__ == "__main__":
+    # print(One("a").f())
     print(One(Two()).f())
     loop()
