@@ -2,6 +2,7 @@ from typing import Callable
 
 
 def blue_method(id, task):
+    a = 2;
     big_ugly_method(id, task)
 
 

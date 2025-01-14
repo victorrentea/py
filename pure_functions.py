@@ -7,16 +7,22 @@ class Pure:
 
     def compute_prices(self, customer_id, product_ids, internal_prices):
         customer = self.customer_repo.find_by_id(customer_id)
-        products = self.product_repo.find_all_by_id(product_ids) # fetch many products at once
+        # n = customer.name.upper() if customer.name else "Default Name"
+        products = self.product_repo.find_all_by_id(product_ids) # fetch many products at once BUN
+        # products = [self.product_repo.find_by_id(id) for id in product_ids] #PROST = N+1 query problem
+        # uzual apare cand un framework/cod necunoscut le face fara sa te prinzi (Hibernate/ORM)
 
-        product_prices = [internal_prices.get(product.id) or self.third_party_prices_api.fetch_price(product.id)
-                          for product in products]
+        product_prices = self.resolve_prices(internal_prices, products)
 
         # in general e dubios sa returnezi mai multe valori dintr-o functie. poti incalca principiul single responsibility
         final_prices, used_coupons = self.apply_coupons(products, customer.coupons, product_prices)
 
         self.coupon_repo.mark_used_coupons(customer_id, used_coupons)
         return final_prices
+
+        def resolve_prices(self, internal_prices, products):
+        return [internal_prices.get(product.id) or self.third_party_prices_api.fetch_price(product.id)
+                for product in products]
 
     # class {}
 
@@ -60,6 +66,8 @@ class CouponRepo(Repository):
 
 
 class Customer:
+    coupons: list
+    name: str
     def __init__(self):
         self.coupons = []
 
