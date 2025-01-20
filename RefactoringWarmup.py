@@ -27,23 +27,17 @@ class R:
     def __init__(self, x):
         self._x = x
 
-    def x(self):
-        return self._x
-
-
 class One:
     def __init__(self, two):
         self.two = two
 
-    def f(self):
-        return 2 * self.two.g(R(3))
 
 
 class Two:
     def g(self, r):
         b = 2
         print(f"b={b}")
-        return 1 + b + r.x()
+        return 1 + b + r.x
 
     def unknown(self):
         print(f"b={987}")
