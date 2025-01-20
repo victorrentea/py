@@ -31,6 +31,8 @@ class One:
     def __init__(self, two):
         self.two = two
 
+    def f(self):
+        return 2 * self.two.g(R(3))
 
 
 class Two:
