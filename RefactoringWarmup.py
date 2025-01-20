@@ -1,5 +1,8 @@
 from math import sqrt
 
+DAYS_PER_WEEK = 7
+
+
 # TODO: Practice Refactoring
 #  * How to?
 #    - Select text > Hover
@@ -27,20 +30,27 @@ class R:
     def __init__(self, x):
         self._x = x
 
+
 class One:
     def __init__(self, two):
         self.two = two
 
+    def f(self):
+        self.two.g(DAYS_PER_WEEK, R(3))
+        return 2 * self.two.g(1, R(3))
 
 
 class Two:
-    def g(self, r):
+    def g(self, i, r):
         b = 2
+        self.ff(b)
+        return i + b + r.x
+
+    def ff(self, b):
         print(f"b={b}")
-        return 1 + b + r.x
 
     def unknown(self):
-        print(f"b={987}")
+        self.ff(987)
 
 
 def loop():
