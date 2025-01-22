@@ -43,15 +43,23 @@ class CarModel:
 
 
 def years_match(car_model, criteria):
-    # return intervals_intersect(
-    #     criteria.start_year, criteria.end_year,
-    #     car_model.start_year, car_model.end_year)
-    interval1={start:criteria.start_year, end:criteria.end_year}
-    interval2={start:car_model.start_year, end:car_model.end_year}
-    return intervals_intersect(interval1,interval2)
+    interval1 = Interval(criteria.start_year, criteria.end_year)
+    interval2 = Interval(car_model.start_year, car_model.end_year)
+    return interval1.intersects(interval2)
 
 def intervals_intersect(interval1, interval2):
     return interval1.start <= interval2.end and interval2.start <= interval1.end  # copiata cu grije din StackOverflow
+
+class Interval:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def length(self):
+        return self.end - self.start
+
+    def intersects(self, other):
+        return self.start <= other.end and other.start <= self.end
 
 
 def filter_car_models(criteria: CarSearchCriteria, car_models: list[CarModel]):
