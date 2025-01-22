@@ -32,28 +32,34 @@ class One:
         self.two = two
 
     def f(self):
-        return 2 * self.two.g(R(3))
+        return 2 * self.two.g2(R(3))
 
 
 class Two:
-    def g(self, r):
-        b = 2
-        print(f"b={b}")
-        return 1 + b + r.x
+    def g2(self, rec):
+        bou = 2
+        print(f"b={bou}")
+        return 1 + bou + rec.x
 
     def unknown(self):
         print(f"b={987}")
 
-
 def loop():
     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    ssq = 0
-    for number in numbers:
-        if number % 2 == 0:
-            ssq += number * number
+    ssq = sum([n*n for n in numbers if n % 2 == 0])
     print(sqrt(ssq))
 
 
 if __name__ == "__main__":
     print(One(Two()).f())
     loop()
+
+
+def aPotSieu(i,j, s=2):
+    print(i + j + p)
+
+aPotSieu(1,2) # de obicei
+aPotSieu(1,2) # de obicei
+aPotSieu(1,2) # de obicei
+aPotSieu(1,2) # de obicei
+aPotSieu(1,2, s=3) # 2 vrea in 3 in loc de 2
