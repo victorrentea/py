@@ -25,6 +25,9 @@ class CarModel:
         self.start_year = start_year
         self.end_year = end_year
 
+    def interval(self):
+        return Interval(self.start_year, self.end_year)
+
     def get_end_year(self):
         self.make = 2
         return self.end_year
@@ -43,9 +46,9 @@ class CarModel:
 
 
 def years_match(car_model, criteria):
+    criteria.end_year += 1
     interval1 = Interval(criteria.start_year, criteria.end_year)
-    interval2 = Interval(car_model.start_year, car_model.end_year)
-    return interval1.intersects(interval2)
+    return interval1.intersects(car_model.interval())
 
 def intervals_intersect(interval1, interval2):
     return interval1.start <= interval2.end and interval2.start <= interval1.end  # copiata cu grije din StackOverflow
