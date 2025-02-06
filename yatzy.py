@@ -1,11 +1,11 @@
 
 '''
-   Ones, Twos, Threes, Fours, Fives, Sixes:
-   The player scores the sum of the dice that reads one, two, three, four, five or six, respectively. For example:
-   1,1,2,4,4 placed on “fours” scores 8 (4+4)
-   2,3,2,5,1 placed on “twos” scores 4 (2+2)
-   3,3,3,4,5 placed on “ones” scores 0
-   '''
+Ones, Twos, Threes, Fours, Fives, Sixes:
+The player scores the sum of the dice that reads one, two, three, four, five or six, respectively. For example:
+1,1,2,4,4 placed on “fours” scores 8 (4+4)
+2,3,2,5,1 placed on “twos” scores 4 (2+2)
+3,3,3,4,5 placed on “ones” scores 0
+'''
 def ones(d1, d2, d3, d4, d5):
     sum = 0
     if (d1 == 1):
