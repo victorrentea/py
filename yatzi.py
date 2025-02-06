@@ -10,6 +10,11 @@ class Yatzy:
         self.dice[4] = d5
 
     def chance(self):
+        '''
+        The player scores the sum of all dice, no matter what they read. For example:
+        1,1,3,3,6 placed on “chance” scores 14 (1+1+3+3+6)
+        4,5,5,6,1 placed on “chance” scores 21 (4+5+5+6+1)
+        '''
         total = 0
         total += self.dice[0]
         total += self.dice[1]
@@ -19,6 +24,11 @@ class Yatzy:
         return total
 
     def yatzy(self):
+        '''
+        If all dice have the same number, the player scores 50 points. For example:
+        1,1,1,1,1 placed on “yatzy” scores 50
+        1,1,1,2,1 placed on “yatzy” scores 0
+        '''
         counts = [0] * (len(self.dice) + 1)
         for die in self.dice:
             counts[die - 1] += 1
@@ -27,6 +37,14 @@ class Yatzy:
                 return 50
         return 0
 
+
+    '''
+    Ones, Twos, Threes, Fours, Fives, Sixes:
+    The player scores the sum of the dice that reads one, two, three, four, five or six, respectively. For example:
+    1,1,2,4,4 placed on “fours” scores 8 (4+4)
+    2,3,2,5,1 placed on “twos” scores 4 (2+2)
+    3,3,3,4,5 placed on “ones” scores 0
+    '''
     @staticmethod
     def ones(d1, d2, d3, d4, d5):
         sum = 0
@@ -40,7 +58,6 @@ class Yatzy:
             sum += 1
         if (d5 == 1):
             sum += 1
-
         return sum
 
     @staticmethod
@@ -58,18 +75,17 @@ class Yatzy:
             sum += 2
         return sum
 
-    @staticmethod
-    def threes(d1, d2, d3, d4, d5):
+    def threes(self):
         s = 0
-        if (d1 == 3):
+        if (d[0] == 3):
             s += 3
-        if (d2 == 3):
+        if (d[1] == 3):
             s += 3
-        if (d3 == 3):
+        if (d[2] == 3):
             s += 3
-        if (d4 == 3):
+        if (d[3] == 3):
             s += 3
-        if (d5 == 3):
+        if (d[4] == 3):
             s += 3
         return s
 
@@ -87,7 +103,6 @@ class Yatzy:
             if (self.dice[i] == 5):
                 s = s + 5
         return s
-
     def sixes(self):
         sum = 0
         for at in range(len(self.dice)):
@@ -95,127 +110,69 @@ class Yatzy:
                 sum = sum + 6
         return sum
 
-    def score_pair(self, d1, d2, d3, d4, d5):
-        counts = [0] * 6
-        counts[d1 - 1] += 1
-        counts[d2 - 1] += 1
-        counts[d3 - 1] += 1
-        counts[d4 - 1] += 1
-        counts[d5 - 1] += 1
-        at = 0
-        for at in range(6):
-            if (counts[6 - at - 1] == 2):
-                return (6 - at) * 2
+    def score_pair(self):
+        '''
+        The player scores the sum of the two highest matching dice. For example, when placed on “pair”:
+        1,2,3,4,5 scores 0
+        3,3,3,4,4 scores 8 (4+4)
+        1,1,6,2,6 scores 12 (6+6)
+        3,3,3,4,1 scores 6 (3+3)
+        3,3,3,3,1 scores 6 (3+3)
+        '''
         return 0
 
-    @staticmethod
-    def two_pair(d1, d2, d3, d4, d5):
-        counts = [0] * 6
-        counts[d1 - 1] += 1
-        counts[d2 - 1] += 1
-        counts[d3 - 1] += 1
-        counts[d4 - 1] += 1
-        counts[d5 - 1] += 1
-        n = 0
-        score = 0
-        for i in range(6):
-            if (counts[6 - i - 1] >= 2):
-                n = n + 1
-                score += (6 - i)
-
-        if (n == 2):
-            return score * 2
-        else:
-            return 0
-
-    @staticmethod
-    def four_of_a_kind(_1, _2, d3, d4, d5):
-        tallies = [0] * 6
-        tallies[_1 - 1] += 1
-        tallies[_2 - 1] += 1
-        tallies[d3 - 1] += 1
-        tallies[d4 - 1] += 1
-        tallies[d5 - 1] += 1
-        for i in range(6):
-            if (tallies[i] >= 4):
-                return (i + 1) * 4
+    def two_pair(self):
+        '''
+        If there are two pairs of dice with the same number, the player scores the sum of these dice. For example, when placed on “two pairs”:
+        1,1,2,3,3 scores 8 (1+1+3+3)
+        1,1,2,3,4 scores 0
+        1,1,2,2,2 scores 6 (1+1+2+2)
+        3,3,3,3,1 scores 0
+        '''
         return 0
 
-    @staticmethod
-    def three_of_a_kind(d1, d2, d3, d4, d5):
-        t = [0] * 6
-        t[d1 - 1] += 1
-        t[d2 - 1] += 1
-        t[d3 - 1] += 1
-        t[d4 - 1] += 1
-        t[d5 - 1] += 1
-        for i in range(6):
-            if (t[i] >= 3):
-                return (i + 1) * 3
+    def three_of_a_kind(self):
+        '''
+        if there are three dice with the same number, the player scores the sum of these dice. For example, when placed on “three of a kind”:
+        3,3,3,4,5 scores 9 (3+3+3)
+        3,3,4,5,6 scores 0
+        3,3,3,3,1 scores 9 (3+3+3)
+        '''
         return 0
 
-    @staticmethod
-    def smallStraight(d1, d2, d3, d4, d5):
-        tallies = [0] * 6
-        tallies[d1 - 1] += 1
-        tallies[d2 - 1] += 1
-        tallies[d3 - 1] += 1
-        tallies[d4 - 1] += 1
-        tallies[d5 - 1] += 1
-        if (tallies[0] == 1 and
-                tallies[1] == 1 and
-                tallies[2] == 1 and
-                tallies[3] == 1 and
-                tallies[4] == 1):
-            return 15
-        return 0
+    def four_of_a_kind(self):
+        '''
+        If there are four dice with the same number, the player scores the sum of these dice. For example, when placed on “four of a kind”:
+        2,2,2,2,5 scores 8 (2+2+2+2)
+        2,2,2,5,5 scores 0
+        2,2,2,2,2 scores 8 (2+2+2+2)
+        '''
+        return 0 # TODO
 
-    @staticmethod
-    def largeStraight(d1, d2, d3, d4, d5):
-        tallies = [0] * 6
-        tallies[d1 - 1] += 1
-        tallies[d2 - 1] += 1
-        tallies[d3 - 1] += 1
-        tallies[d4 - 1] += 1
-        tallies[d5 - 1] += 1
-        if (tallies[1] == 1 and
-                tallies[2] == 1 and
-                tallies[3] == 1 and
-                tallies[4] == 1
-                and tallies[5] == 1):
-            return 20
-        return 0
+    def smallStraight(self):
+        '''
+        When placed on “small straight”, if the dice read
+        1,2,3,4,5,
+        the player scores 15 (the sum of all the dice).
+        '''
+        return 0 # TODO
 
-    @staticmethod
-    def fullHouse(d1, d2, d3, d4, d5):
-        tallies = []
-        _2 = False
-        i = 0
-        _2_at = 0
-        _3 = False
-        _3_at = 0
+    def largeStraight(self):
+        '''
+        When placed on “large straight”, if the dice read
+        2,3,4,5,6,
+        the player scores 20 (the sum of all the dice).
+        '''
+        return 0 # TODO
 
-        tallies = [0] * 6
-        tallies[d1 - 1] += 1
-        tallies[d2 - 1] += 1
-        tallies[d3 - 1] += 1
-        tallies[d4 - 1] += 1
-        tallies[d5 - 1] += 1
-
-        for i in range(6):
-            if (tallies[i] == 2):
-                _2 = True
-                _2_at = i + 1
-
-        for i in range(6):
-            if (tallies[i] == 3):
-                _3 = True
-                _3_at = i + 1
-
-        if (_2 and _3):
-            return _2_at * 2 + _3_at * 3
-        else:
-            return 0
+    def fullHouse(self):
+        '''
+        If the dice are two of a kind and three of a kind, the player scores the sum of all the dice. For example, when placed on “full house”:
+        1,1,2,2,2 scores 8 (1+1+2+2+2)
+        2,2,3,3,4 scores 0
+        4,4,4,4,4 scores 0
+        '''
+        return 0 # TODO
 
 
 import unittest
@@ -226,7 +183,7 @@ import unittest
 
 class YatziTest(unittest.TestCase):
 
-    def test_chance_scores_sum_of_all_dice(self):
+    def test_chance(self):
         expected = 15
         actual = Yatzy(2, 3, 4, 5, 1).chance()
         assert expected == actual
@@ -254,11 +211,11 @@ class YatziTest(unittest.TestCase):
 
 
     def test_threes(self):
-        assert 6 == Yatzy.threes(1, 2, 3, 2, 3)
-        assert 12 == Yatzy.threes(2, 3, 3, 3, 3)
+        assert 6 == Yatzy(1, 2, 3, 2, 3).threes()
+        assert 12 == Yatzy(2, 3, 3, 3, 3).threes()
 
 
-    def test_fours_test(self):
+    def test_fours(self):
         assert 12 == Yatzy(4, 4, 4, 5, 5).fours()
         assert 8 == Yatzy(4, 4, 5, 5, 5).fours()
         assert 4 == Yatzy(4, 5, 5, 5, 5).fours()
@@ -277,43 +234,43 @@ class YatziTest(unittest.TestCase):
 
 
     def test_one_pair(self):
-        assert 6 == Yatzy().score_pair(3, 4, 3, 5, 6)
-        assert 10 == Yatzy().score_pair(5, 3, 3, 3, 5)
-        assert 12 == Yatzy().score_pair(5, 3, 6, 6, 5)
+        assert 6 == Yatzy(3, 4, 3, 5, 6).score_pair()
+        assert 10 == Yatzy(5, 3, 3, 3, 5).score_pair()
+        assert 12 == Yatzy(5, 3, 6, 6, 5).score_pair()
 
 
     def test_two_Pair(self):
-        assert 16 == Yatzy().two_pair(3, 3, 5, 4, 5)
-        assert 18 == Yatzy().two_pair(3, 3, 6, 6, 6)
-        assert 0 == Yatzy().two_pair(3, 3, 6, 5, 4)
+        assert 16 == Yatzy(3, 3, 5, 4, 5).two_pair()
+        assert 18 == Yatzy(3, 3, 6, 6, 6).two_pair()
+        assert 0 == Yatzy(3, 3, 6, 5, 4).two_pair()
 
 
     def test_three_of_a_kind(self):
-        assert 9 == Yatzy().three_of_a_kind(3, 3, 3, 4, 5)
-        assert 15 == Yatzy().three_of_a_kind(5, 3, 5, 4, 5)
-        assert 9 == Yatzy.three_of_a_kind(3, 3, 3, 3, 5)
+        assert 9 == Yatzy(3, 3, 3, 4, 5).three_of_a_kind()
+        assert 15 == Yatzy(5, 3, 5, 4, 5).three_of_a_kind()
+        assert 9 == Yatzy(3, 3, 3, 3, 5).three_of_a_kind()
 
 
     def test_four_of_a_knd(self):
-        assert 12 == Yatzy.four_of_a_kind(3, 3, 3, 3, 5)
-        assert 20 == Yatzy.four_of_a_kind(5, 5, 5, 4, 5)
-        assert 12 == Yatzy.four_of_a_kind(3, 3, 3, 3, 3)
-        assert 0 == Yatzy.four_of_a_kind(3, 3, 3, 2, 1)
+        assert 12 == Yatzy(3, 3, 3, 3, 5).four_of_a_kind()
+        assert 20 == Yatzy(5, 5, 5, 4, 5).four_of_a_kind()
+        assert 12 == Yatzy(3, 3, 3, 3, 3).four_of_a_kind()
+        assert 0 == Yatzy(3, 3, 3, 2, 1).four_of_a_kind()
 
 
     def test_smallStraight(self):
-        assert 15 == Yatzy.smallStraight(1, 2, 3, 4, 5)
-        assert 15 == Yatzy.smallStraight(2, 3, 4, 5, 1)
-        assert 0 == Yatzy().smallStraight(1, 2, 2, 4, 5)
+        assert 15 == Yatzy(1, 2, 3, 4, 5).smallStraight()
+        assert 15 == Yatzy(2, 3, 4, 5, 1).smallStraight()
+        assert 0 == Yatzy(1, 2, 2, 4, 5).smallStraight()
 
 
     def test_largeStraight(self):
-        assert 20 == Yatzy.largeStraight(6, 2, 3, 4, 5)
-        assert 20 == Yatzy().largeStraight(2, 3, 4, 5, 6)
-        assert 0 == Yatzy.largeStraight(1, 2, 2, 4, 5)
+        assert 20 == Yatzy(6, 2, 3, 4, 5).largeStraight()
+        assert 20 == Yatzy(2, 3, 4, 5, 6).largeStraight()
+        assert 0 == Yatzy(1, 2, 2, 4, 5).largeStraight()
 
 
     def test_fullHouse(self):
-        assert 18 == Yatzy.fullHouse(6, 2, 2, 2, 6)
-        assert 0 == Yatzy.fullHouse(2, 3, 4, 5, 6)
+        assert 18 == Yatzy(6, 2, 2, 2, 6).fullHouse()
+        assert 0 == Yatzy(2, 3, 4, 5, 6).fullHouse()
 
