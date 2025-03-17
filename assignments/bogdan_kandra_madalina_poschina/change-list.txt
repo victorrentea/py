@@ -1,0 +1,25 @@
+- Moved "import" statement to the top of the script
+- Removed "for" block from Game class constructor and replaced it with list comprehensions,
+	as they are more Pythonic and optimized than "for" blocks.
+- Removed create_rock_question() method, as it's redundant and it's better to avoid the overhead
+	of adding function calls on the stack, if possible.
+- Removed how_many_players() method, because it was inappropriately using the @property decorator
+	and it only contained one simple line of code. The @property decorator is used for encapsulating
+	instance attributes, which is not the case here.
+- Removed the @property decorator from the _current_category() method, for the same reason as above.
+- Introduced extra class attribute, so that the _current_category() method could be heavily simplified.
+- Removed return value from add() method, as it wasn't needed
+- Rewrote logic in roll() method:
+	- Introduced extra "if" condition, so that code is not duplicated
+	- Replaced "if" check on the places attribute, with a modulus operation
+- Rewrote logic in was_correctly_answered() method:
+	- Introduced extra "if" condition, so that code is not duplicated
+- Removed _did_player_win() method, as it was a one-liner.
+- Renamed was_correctly_answered() to correct_answer().
+- Replaced formatting by string interpolation and "%" operator with f-strings, as they are more
+	readable and maintainable.
+- Removed extra whitespace.
+- Introduced variables for winning score and board size, instead of hardcoded values (6 & 12).
+- Created a dictionary of category per location and updated the _current_category method to retrieve the associated value from the dictionary, or "Rock" if another position is questioned.
+- Instead of 4 lists of questions, we created a dictionary with 4 keys (for the subjects) that register the associated questions.
+- Removed the variable is_getting_out_of_penalty_box and integrated the logic in the in_penalty_box registry of players.
