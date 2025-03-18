@@ -109,7 +109,7 @@ class Game:
         return True
 
     def _did_player_win(self):
-        return not (self.purses[self.current_player] == 6)
+        return self.purses[self.current_player] != 6
 
 
 from random import randrange

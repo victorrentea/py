@@ -1,5 +1,8 @@
 from math import sqrt
 
+ANSWER_OF_LIFE = 42
+UNGARIA = ""
+
 # TODO: Practice Refactoring
 #  * How to?
 #    - Select text > Hover
@@ -25,35 +28,36 @@ from math import sqrt
 
 class R:
     def __init__(self, x):
-        self._x = x
-
-class One:
-    def __init__(self, two):
-        self.two = two
-
-    def f(self):
-        return 2 * self.two.g(R(3))
+        self.x = x
 
 
 class Two:
-    def g(self, r):
+    def sanitize_fulfillment_data(self, r:R, p:int=ANSWER_OF_LIFE):
         b = 2
+        
         print(f"b={b}")
-        return 1 + b + r.x
+
+        return p + b + r.x
+
 
     def unknown(self):
-        print(f"b={987}")
+        print(f"b={987} " + UNGARIA) # "" = ungaria
+
+class One:
+    def __init__(self, two:Two):
+        self.two = two
+
+    def f(self):
+        return 2 * self.two.sanitize_fulfillment_data(R(3))
 
 
 def loop():
     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    ssq = 0
-    for number in numbers:
-        if number % 2 == 0:
-            ssq += number * number
+    ssq = sum([x*x for x in numbers if x %2 == 0])
     print(sqrt(ssq))
 
 
 if __name__ == "__main__":
     print(One(Two()).f())
+    (Two()).sanitize_fulfillment_data(R(),7) # nu 42 si 7 nr sfant
     loop()

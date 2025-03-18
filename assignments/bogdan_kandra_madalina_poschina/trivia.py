@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
+from enum import Enum
 from random import randrange
+import string
+
+class Subject(Enum):
+    POP = "Pop"
+    SCIENCE = "Science"
+    SPORTS = "Sports"
+    ROCK = "Rock"
 
 
 class Game:
@@ -12,26 +20,26 @@ class Game:
         self.in_penalty_box = []
         self.winner = False
 
-        self.questions = {
-            "Pop": [f"Pop Question {i}" for i in range(50)],
-            "Science": [f"Science Question {i}" for i in range(50)],
-            "Sports": [f"Sports Question {i}" for i in range(50)],
-            "Rock": [f"Rock Question {i}" for i in range(50)]
+        self.questions:dict[Subject,list(str)] = { # type: ignore
+            Subject.POP: [f"Pop Question {i}" for i in range(50)],
+            Subject.SCIENCE: [f"Science Question {i}" for i in range(50)],
+            Subject.SPORTS: [f"Sports Question {i}" for i in range(50)],
+            Subject.ROCK: [f"Rock Question {i}" for i in range(50)]
         }
 
         self.category_order = {
-            0: "Pop",
-            1: "Science",
-            2: "Sports",
-            3: "Rock",
-            4: "Pop",
-            5: "Science",
-            6: "Sports",
-            7: "Rock",
-            8: "Pop",
-            9: "Science",
-            10: "Sports",
-            11: "Rock"
+            0: Subject.POP,
+            1: Subject.SCIENCE,
+            2: Subject.SPORTS,
+            3: Subject.ROCK,
+            4: Subject.POP,
+            5: Subject.SCIENCE,
+            6: Subject.SPORTS,
+            7: Subject.ROCK,
+            8: Subject.POP,
+            9: Subject.SCIENCE,
+            10: Subject.SPORTS,
+            11: Subject.ROCK
         }
 
         self.current_player = 0
@@ -67,10 +75,7 @@ class Game:
         print(self.questions[self._current_category()].pop(0))
 
     def _current_category(self):
-        return self.category_order.get(
-            self.places[self.current_player],
-            "Rock"
-            )
+        return self.category_order.get(self.places[self.current_player],"Rock")
 
     def _next_player(self):
         self.current_player = (self.current_player + 1) % len(self.players)

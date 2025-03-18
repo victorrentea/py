@@ -6,10 +6,10 @@ def f(extract_options:dict):
 
     # RAU: nu folosim try except pentru flow control
     # Anathema
-    try:
-        extract_options["process"]
-    except:
-        ????
+    # try:
+    extract_options["process"]
+    # except:
+    #     raise
 
 
     # 3 ftw

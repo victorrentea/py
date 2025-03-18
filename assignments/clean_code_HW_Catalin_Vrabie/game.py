@@ -1,28 +1,29 @@
 #!/usr/bin/env python3
+COINS_TO_WIN = 6
 
 class Game:
     def __init__(self):
-        self.players = []
-        self.places = []
-        self.purses = []
+        self.player_names = []
+        self.player_place = []
+        self.player_purse = []
         self.in_penalty_box = []
         self.current_player = 0
-        self.coins_to_win = 6
-        self.winner = False
+        self.has_winner = False
 
         self.category_question_indexes = {"Pop": 0, "Science": 0, "Sports": 0, "Rock": 0}
 
-        self.places_question_categories = {0: "Pop", 1: "Science", 2: "Sports", 3: "Rock", 
-                                  4: "Pop", 5: "Science", 6: "Sports", 7: "Rock",
-                                  8: "Pop", 9: "Science", 10: "Sports", 11: "Rock"}
+        self.places_question_categories = {
+            0: "Pop", 1: "Science", 2: "Sports", 3: "Rock", 
+            4: "Pop", 5: "Science", 6: "Sports", 7: "Rock",
+            8: "Pop", 9: "Science", 10: "Sports", 11: "Rock"}
         
     def is_playable(self):
         return self.how_many_players >= 2
 
     def add(self, player_name):
-        self.players.append(player_name)
-        self.places.append(0)
-        self.purses.append(0)
+        self.player_names.append(player_name)
+        self.player_place.append(0)
+        self.player_purse.append(0)
         self.in_penalty_box.append(False)
 
         print(f"{player_name} was added")
@@ -30,29 +31,30 @@ class Game:
 
     @property
     def how_many_players(self):
-        return len(self.players)
+        return len(self.player_names)
     
-    def update_place(self, roll):
-        self.places[self.current_player] = (self.places[self.current_player] + roll) % 12
+    def update_place(self, roll): # pusa in class Player
+        self.player_place[self.current_player] = (self.player_place[self.current_player] + roll) % 12
 
     def remains_in_penalty_box(self, roll):
         return self.in_penalty_box[self.current_player] and roll % 2 == 0    
 
     def roll(self, roll):
-        print(f"{self.players[self.current_player]} is the current player")
+        print(f"{self.player_names[self.current_player]} is the current player")
         print(f"They have rolled a {roll}")
 
         if self.remains_in_penalty_box(roll):
-            print(f"{self.players[self.current_player]} is not getting out of the penalty box")
-        else: 
-            if self.in_penalty_box[self.current_player]:
-                self.in_penalty_box[self.current_player] = False
-                print(f"{self.players[self.current_player]} is getting out of the penalty box")
+            print(f"{self.player_names[self.current_player]} is not getting out of the penalty box")
+            return
+        
+        if self.in_penalty_box[self.current_player]:
+            self.in_penalty_box[self.current_player] = False
+            print(f"{self.player_names[self.current_player]} is getting out of the penalty box")
 
-            self.update_place(roll)
-            print(f"{self.players[self.current_player]}'s new location is {self.places[self.current_player]}")
-            print(f"The category is {self._current_category}")
-            self._ask_question()
+        self.update_place(roll)
+        print(f"{self.player_names[self.current_player]}'s new location is {self.player_place[self.current_player]}")
+        print(f"The category is {self._current_category}")
+        self._ask_question()
 
     def _ask_question(self):
         print(f"{self._current_category} Question {self.category_question_indexes[self._current_category]}")
@@ -60,29 +62,27 @@ class Game:
 
     @property
     def _current_category(self):
-        return self.places_question_categories[self.places[self.current_player]]
+        return self.places_question_categories[self.player_place[self.current_player]]
     
     def next_player(self):
         self.current_player = (self.current_player + 1) % self.how_many_players
 
     def correct_answer(self):
-        if self.in_penalty_box[self.current_player]:
-            self.next_player()
-        else:
+        if not self.in_penalty_box[self.current_player]:
             print('Answer was correct!!!!')
-            self.purses[self.current_player] += 1
-            print(f'{self.players[self.current_player]} now has {self.purses[self.current_player]} Gold Coins.') 
-            self.winner = self._did_player_win()
-            self.next_player()
+            self.player_purse[self.current_player] += 1
+            print(f'{self.player_names[self.current_player]} now has {self.player_purse[self.current_player]} Gold Coins.') 
+            self.has_winner = self._did_player_win()
+        self.next_player()
 
     def wrong_answer(self):
         print('Question was incorrectly answered')
-        print(f"{self.players[self.current_player]} was sent to the penalty box")
+        print(f"{self.player_names[self.current_player]} was sent to the penalty box")
         self.in_penalty_box[self.current_player] = True
         self.next_player()
 
     def _did_player_win(self):
-        return self.purses[self.current_player] == self.coins_to_win
+        return self.player_purse[self.current_player] == COINS_TO_WIN
     
 from random import randrange
 
@@ -101,4 +101,4 @@ if __name__ == '__main__':
         else:
             game.correct_answer()
 
-        if game.winner: break
+        if game.has_winner: break
