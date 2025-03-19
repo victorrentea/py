@@ -40,6 +40,8 @@ class Customer:
                 this_amount += 2
                 if dr > 2:
                     this_amount += (dr - 2) * 1.5
+                if dr > 5:
+                    this_amount += (dr - 5) * 1.5
             elif each.get_price_code() == Movie.NEW_RELEASE:
                 this_amount += dr * 3
             elif each.get_price_code() == Movie.CHILDRENS:
