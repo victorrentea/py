@@ -1,12 +1,14 @@
+def logged(prefix):
+    def inner(func):
+        def wrapper(*args, **kwargs):
+            print(f"{prefix} Before")
+            func(*args, **kwargs)
+            print(f"{prefix} After")
+        return wrapper
+    return inner
 
-def decorate(func):
-    def wrapper(*args, **kwargs):
-        print("Before")
-        func(*args, **kwargs)
-        print("After")
-    return wrapper
 
-@decorate
+@logged("Log")
 def function(a,b):
     print(a,b)
 
