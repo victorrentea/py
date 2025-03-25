@@ -7,27 +7,11 @@ The player scores the sum of the dice that reads one, two, three, four, five or 
 3,3,3,4,5 placed on “ones” scores 0
 '''
 def ones(d1, d2, d3, d4, d5):
-    sum = 0
-    if (d1 == 1):
-        sum += 1
-    if (d2 == 1):
-        sum += 1
-    if (d3 == 1):
-        sum += 1
-    if (d4 == 1):
-        sum += 1
-    if (d5 == 1):
-        sum += 1
-    return sum
+    return sum([d for d in [d1, d2, d3, d4, d5] if d == 1])
 
 class Yatzy:
     def __init__(self, d1=0, d2=0, d3=0, d4=0, d5=0):
-        self.dice = [0] * 5
-        self.dice[0] = d1
-        self.dice[1] = d2
-        self.dice[2] = d3
-        self.dice[3] = d4
-        self.dice[4] = d5
+        self.dice = [d1, d2, d3, d4, d5]
 
     def chance(self):
         '''
@@ -35,13 +19,7 @@ class Yatzy:
         1,1,3,3,6 placed on “chance” scores 14 (1+1+3+3+6)
         4,5,5,6,1 placed on “chance” scores 21 (4+5+5+6+1)
         '''
-        total = 0
-        total += self.dice[0]
-        total += self.dice[1]
-        total += self.dice[2]
-        total += self.dice[3]
-        total += self.dice[4]
-        return total
+        return sum(self.dice)
 
     def yatzy(self):
         '''
@@ -49,66 +27,22 @@ class Yatzy:
         1,1,1,1,1 placed on “yatzy” scores 50
         1,1,1,2,1 placed on “yatzy” scores 0
         '''
-        counts = [0] * (len(self.dice) + 1)
-        for die in self.dice:
-            counts[die - 1] += 1
-        for i in range(len(counts)):
-            if counts[i] == 5:
-                return 50
-        return 0
+        return 50 if self.dice.count(self.dice[0]) == 5 else 0
 
+    def twos(self):
+        return self.sum_by_num(2)
 
-
-
-    @staticmethod
-    def twos(d1, d2, d3, d4, d5):
-        sum = 0
-        if (d1 == 2):
-            sum += 2
-        if (d2 == 2):
-            sum += 2
-        if (d3 == 2):
-            sum += 2
-        if (d4 == 2):
-            sum += 2
-        if (d5 == 2):
-            sum += 2
-        return sum
+    def sum_by_num(self, dice_value):
+        return sum([d for d in self.dice if d == dice_value])
 
     def threes(self):
-        s = 0
-        if (d[0] == 3):
-            s += 3
-        if (d[1] == 3):
-            s += 3
-        if (d[2] == 3):
-            s += 3
-        if (d[3] == 3):
-            s += 3
-        if (d[4] == 3):
-            s += 3
-        return s
+        return self.sum_by_num(3)
 
     def fours(self):
-        sum = 0
-        for at in range(5):
-            if (self.dice[at] == 4):
-                sum += 4
-        return sum
+        return self.sum_by_num(4)
 
     def fives(self):
-        s = 0
-        i = 0
-        for i in range(len(self.dice)):
-            if (self.dice[i] == 5):
-                s = s + 5
-        return s
-    def sixes(self):
-        sum = 0
-        for at in range(len(self.dice)):
-            if (self.dice[at] == 6):
-                sum = sum + 6
-        return sum
+        return self.sum_by_num(5)
 
     def score_pair(self):
         '''
@@ -119,7 +53,8 @@ class Yatzy:
         3,3,3,4,1 scores 6 (3+3)
         3,3,3,3,1 scores 6 (3+3)
         '''
-        return 0
+        fv = {d: self.dice.count(d) for d in self.dice}
+        return max([die*2 for die,die_num in fv.items() if die_num >= 2])
 
     def two_pair(self):
         '''
@@ -129,7 +64,14 @@ class Yatzy:
         1,1,2,2,2 scores 6 (1+1+2+2)
         3,3,3,3,1 scores 0
         '''
-        return 0
+        fv = {d: self.dice.count(d) for d in self.dice}
+        print(self.dice)
+        print(fv)
+        list = [die*2 for die,die_num in fv.items() if die_num >= 2]
+        if len(list) >= 2:
+            return sum(list)
+        else:
+            return 0
 
     def three_of_a_kind(self):
         '''
@@ -163,7 +105,12 @@ class Yatzy:
         2,3,4,5,6,
         the player scores 20 (the sum of all the dice).
         '''
-        return 0 # TODO
+        list = [d for d in self.dice]
+        list.sort()
+        if list == [2,3,4,5,6]:
+            return 20
+        else:
+            return 0
 
     def fullHouse(self):
         '''
@@ -206,8 +153,8 @@ class YatziTest(unittest.TestCase):
 
 
     def test_2s(self):
-        assert 4 == Yatzy.twos(1, 2, 3, 2, 6)
-        assert 10 == Yatzy.twos(2, 2, 2, 2, 2)
+        assert 4 == Yatzy(1, 2, 3, 2, 6).twos()
+        assert 10 == Yatzy(2, 2, 2, 2, 2).twos()
 
 
     def test_threes(self):
@@ -269,8 +216,9 @@ class YatziTest(unittest.TestCase):
         assert 20 == Yatzy(2, 3, 4, 5, 6).largeStraight()
         assert 0 == Yatzy(1, 2, 2, 4, 5).largeStraight()
 
-
     def test_fullHouse(self):
         assert 18 == Yatzy(6, 2, 2, 2, 6).fullHouse()
         assert 0 == Yatzy(2, 3, 4, 5, 6).fullHouse()
 
+if __name__ == '__main__':
+    unittest.main()
