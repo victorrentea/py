@@ -6,23 +6,43 @@ class Pure:
         self.product_repo = product_repo
 
     def compute_prices(self, customer_id, product_ids, internal_prices):
-        customer = self.customer_repo.find_by_id(customer_id)
-        products = self.product_repo.find_all_by_id(product_ids)
+        customer = self.customer_repo.find_by_id(customer_id) # WHERE ID = ?
+        products = self.product_repo.find_all_by_id(product_ids) # WHERE ID IN (?,?...)
 
-        used_coupons = []
-        final_prices = {}
+        initial_prices = self.resolve_initial_prices(internal_prices, products)
+
+        # for i in range(len(products)):
+            # product = products[i]
+        # for product, i in products, initial_prices:
+
+        final_prices, used_coupons = self.apply_coupons(customer, products, initial_prices)
+
+        self.coupon_repo.mark_used_coupons(customer_id, used_coupons)
+        return final_prices
+
+    def resolve_initial_prices(self, internal_prices, products):
+        initial_prices = {}
         for product in products:
             price = internal_prices.get(product.id)
             if price is None:
                 price = self.third_party_prices_api.fetch_price(product.id)
+            initial_prices[product.id]=price
+        return initial_prices
+
+    def apply_coupons(self, customer, products, initial_prices):
+        used_coupons = []
+        final_prices = {}
+        for product in products:
+            price = initial_prices[product.id]
+            final_price = self.apply_coupons(customer.coupons, used_coupons, product, price)
             for coupon in customer.coupons:
                 if coupon.auto_apply and coupon.is_applicable_for(product) and coupon not in used_coupons:
                     price = coupon.apply(price, product)
                     used_coupons.append(coupon)
-            final_prices[product.id] = price
+            final_prices[product.id] = final_price
+        return final_prices, used_coupons
 
-        self.coupon_repo.mark_used_coupons(customer_id, used_coupons)
-        return final_prices
+       
 
 
 

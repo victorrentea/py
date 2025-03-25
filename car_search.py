@@ -1,6 +1,18 @@
 def intervals_intersect(start1, end1, start2, end2):
     return start1 <= end2 and start2 <= end1
 
+class Interval:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def intersects(self, other):
+        return self.start <= other.end and other.start <= self.end
+
+def intervals_intersect_elena(interval1:Interval, interval2):
+    return interval1.start <= interval2.end and interval2.start <= interval1.end
+
+
 
 class CarSearchCriteria:
     def __init__(self, start_year, end_year, make):
@@ -46,10 +58,13 @@ class CarModel:
         return f"CarModel{{make='{self.make}', model='{self.model}'}}"
 
     def filter_car_models(criteria, car_models):
-        matches = [car_model for car_model in car_models
-                   if intervals_intersect(
-                criteria.get_start_year(), criteria.get_end_year(),
-                car_model.get_start_year(), car_model.get_end_year())]
+        matches = []
+        for car_model in car_models:
+            criteria_interval = Interval(criteria.start_year, criteria.end_year)
+            car_model_interval = Interval(car_model.get_start_year(), car_model.get_end_year())
+            if criteria_interval.intersects(car_model_interval) :
+                matches.append(car_model)
+
         print("More filtering logic ...")
         return matches
 
