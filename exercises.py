@@ -2,7 +2,7 @@ import random
 import unittest
 
 def odds(list):
-    odds = []
+    odds=[]
 
     print(odds)
     return odds
