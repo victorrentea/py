@@ -2,8 +2,6 @@ import random
 import unittest
 
 
-list = list(range(10,50))
-
 def odds(list):
     odds = []
     for n in list:
