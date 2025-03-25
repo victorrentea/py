@@ -1,9 +1,9 @@
 import random
 import unittest
 
-def odds(list):
+def odds    (list):
     odds=[]
-
+    
     print(odds)
     return odds
 
