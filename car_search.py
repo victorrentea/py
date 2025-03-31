@@ -1,21 +1,25 @@
 def filter_car_models(criteria, car_models):
     matches = []
-    criteria_years = {
-        start:criteria.start_year,
-        end:criteria.end_year
-    }
+    criteria_years = Interval(
+        criteria.start_year,
+        criteria.end_year
+    )
     for car_model in car_models:
-        car_model_years = {
-            start:car_model.start_year,
-            end:car_model.end_year
-        }
+        car_model_years = Interval(
+            car_model.start_year,
+            car_model.end_year
+        )
         if intervals_intersect(car_model_years, criteria_years):
             matches.append(car_model)
     print("Pretend: more filtering logic ...")
     return matches
 
+class Interval:
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
 
-def intervals_intersect(interval_search, interval_criteria):
+def intervals_intersect(interval_search:Interval, interval_criteria:Interval)->bool:
     return interval_search.start <= interval_criteria.end and interval_criteria.start <= interval_search.end # copiata cu grije de pe SO
 
 
