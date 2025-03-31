@@ -14,7 +14,7 @@ def intervals_intersect(interval_search, interval_criteria):
 
 
 def apply_capacity_filter():
-    print(intervals_intersect(1000, 1600, 1250, 2000))
+    print(intervals_intersect((1000, 1600), (1250, 2000)))
 
 
 class CarSearchCriteria:
@@ -41,7 +41,7 @@ class CarModel:
 
 class Alta:
     def apply_capacity_filter(self):
-        print(intervals_intersect(1000, 1600, 1250, 2000))
+        print(intervals_intersect((1000, 1600), (1250, 2000)))
 
 
 def to_dto(car_model):
