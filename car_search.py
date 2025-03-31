@@ -1,14 +1,17 @@
-
 def filter_car_models(criteria, car_models):
-    matches = [car_model for car_model in car_models
-               if intervals_intersect(
-            criteria.start_year, criteria.end_year,
-            car_model.start_year, car_model.end_year)]
+    matches = []
+    for car_model in car_models:
+        if intervals_intersect(
+                criteria.start_year, criteria.end_year,
+                car_model.start_year, car_model.end_year):
+            matches.append(car_model)
     print("Pretend: more filtering logic ...")
     return matches
 
+
 def intervals_intersect(start1, end1, start2, end2):
     return start1 <= end2 and start2 <= end1
+
 
 def apply_capacity_filter():
     print(intervals_intersect(1000, 1600, 1250, 2000))
@@ -36,7 +39,6 @@ class CarModel:
         return f"CarModel{{make='{self.make}', model='{self.model}'}}"
 
 
-
 class Alta:
     def apply_capacity_filter(self):
         print(intervals_intersect(1000, 1600, 1250, 2000))
@@ -49,6 +51,7 @@ def to_dto(car_model):
     dto.start_year = car_model.start_year
     dto.end_year = car_model.end_year
     return dto
+
 
 def from_dto(dto):
     return CarModel(dto.make, dto.model, dto.start_year, dto.end_year)
