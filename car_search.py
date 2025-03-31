@@ -1,16 +1,16 @@
 def filter_car_models(criteria, car_models):
     matches = []
     for car_model in car_models:
-        if intervals_intersect(
-                criteria.start_year, criteria.end_year,
-                car_model.start_year, car_model.end_year):
+        car_model_years = (car_model.start_year, car_model.end_year)
+        criteria_years = (criteria.start_year, criteria.end_year)
+        if intervals_intersect(car_model_years, criteria_years):
             matches.append(car_model)
     print("Pretend: more filtering logic ...")
     return matches
 
 
-def intervals_intersect(start1, end1, start2, end2):
-    return start1 <= end2 and start2 <= end1
+def intervals_intersect(interval_search, interval_criteria):
+    return interval_search[0] <= interval_criteria[1] and interval_criteria[0] <= interval_search[1] # copiata cu grije de pe SO
 
 
 def apply_capacity_filter():
