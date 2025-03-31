@@ -2,24 +2,38 @@ RETIRED_AMOUNT = 2
 DEAD_PAY_AMOUNT = 1
 
 def get_pay_amount(self, marine, bonus_package):
-    if marine is not None :
-        if not marine.dead:
-            if not marine.retired and (bonus_package.value < 100 or bonus_package.value > 10):
-                if marine.years_service is not None:
-                    result = marine.years_service * 100 + bonus_package.value
-                    if len(marine.awards) != 0:
-                        result += 1000
-                    if len(marine.awards) >= 3:
-                        result += 2000
-                    return result
-                else:
-                    raise ValueError("Any marine should have the years of service set.")
-            else:
-                return RETIRED_AMOUNT
-        else:
-            return DEAD_PAY_AMOUNT
-    else:
-        raise ValueError("Not applicable!")
+    if marine is None: #guard
+        raise ValueError("Not applicable!") # early throw
+    if marine.dead: 
+        return DEAD_PAY_AMOUNT #early return
+    # if not (not marine.retired and (bonus_package.value < 100 or bonus_package.value > 10)):
+    # if marine.retired or not (bonus_package.value < 100 or bonus_package.value > 10):
+    # if marine.retired or (bonus_package.value >= 100 and bonus_package.value <= 10):
+    if marine.retired: # suna Produsu
+        return RETIRED_AMOUNT
+    if marine.years_service is None:
+        raise ValueError("Any marine should have the years of service set.")
+
+    result = marine.years_service * 100 + bonus_package.value
+    if len(marine.awards) != 0:
+        result += 1000
+    if len(marine.awards) >= 3:
+        result += 2000
+
+    return result
+
+    # if len(marine.awards) >= 3:
+    #     result += 3000
+    # elif len(marine.awards) != 0:
+    #     result += 1000
+        
+#    if len(marine.awards) != 0 and len(marine.awards) < 3:
+#         result += 1000
+#     if len(marine.awards) >= 3:
+#         result += 3000
+    
+        
+   
 
 
 class Marine:
