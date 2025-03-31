@@ -1,3 +1,25 @@
+from logging import critical
+from dataclasses import dataclass, field
+
+
+# class Interval:
+#     def __init__(self, start, end):
+#         self.start = start
+#         self.end = end
+
+@dataclass
+class Interval:
+    start: int
+    end: int
+
+    # def is_intersected
+    # def has_intersection(self, other:Interval)->bool:
+    # def invterval_match(self, other:Interval)->bool:
+    # def is_intersected(self, other:Interval)->bool:
+    def intersects(self, other)->bool:
+        return self.start <= other.end and other.start <= self.end
+
+
 def filter_car_models(criteria, car_models):
     matches = []
     criteria_years = Interval(
@@ -9,18 +31,15 @@ def filter_car_models(criteria, car_models):
             car_model.start_year,
             car_model.end_year
         )
-        if intervals_intersect(car_model_years, criteria_years):
+        # if intervals_intersect(car_model_years, criteria_years):
+        if car_model_years.intersects(criteria_years):
             matches.append(car_model)
     print("Pretend: more filtering logic ...")
     return matches
 
-class Interval:
-    def __init__(self, start, end):
-        self.start = start
-        self.end = end
-
 def intervals_intersect(interval_search:Interval, interval_criteria:Interval)->bool:
-    return interval_search.start <= interval_criteria.end and interval_criteria.start <= interval_search.end # copiata cu grije de pe SO
+    return (interval_search.start <= interval_criteria.end
+            and interval_criteria.start <= interval_search.end) # copiata cu grije de pe SO
 
 
 def apply_capacity_filter():
@@ -73,3 +92,20 @@ class CarModelDTO:
         self.model = None
         self.start_year = None
         self.end_year = None
+
+
+import unittest
+
+class TestCarSearch(unittest.TestCase):
+    def test_intersects_ok(self):
+        criteria = CarSearchCriteria(2006, 2010, "Ford")
+        car_model = CarModel("Ford", "Fusion", 2000, 2010)
+        matches = filter_car_models(criteria, [car_model])
+        self.assertEqual(1, len(matches))
+
+    def test_intersects_ko(self):
+        criteria = CarSearchCriteria(2006, 2010, "Ford")
+        car_model = CarModel("Ford", "Fusion", 2000, 2004)
+        matches = filter_car_models(criteria, [car_model])
+        self.assertEqual(0, len(matches))
+
