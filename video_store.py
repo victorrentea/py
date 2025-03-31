@@ -5,7 +5,7 @@ class Movie:
     REGULAR = 0
     NEW_RELEASE = 1
     def __init__(self, title, price_code):
-        self._title = title
+        self.title = title
         self._price_code = price_code
 
     def get_price_code(self):
@@ -13,9 +13,6 @@ class Movie:
 
     def set_price_code(self, arg):
         self._price_code = arg
-
-    def get_title(self):
-        return self._title
 
 
 class Customer:
@@ -36,6 +33,8 @@ class Customer:
         for each in self.rentals.keys():
             this_amount = 0
             dr = self.rentals[each]
+
+            # determine amount for each movie
             if each.get_price_code() == Movie.REGULAR:
                 this_amount += 2
                 if dr > 2:
@@ -47,11 +46,13 @@ class Customer:
                 if dr > 3:
                     this_amount += (dr - 3) * 1.5
             frequent_rents_points += 1
+            # add bonus point for new releases rented for at least 2 days
             if (each.get_price_code() == Movie.NEW_RELEASE) and dr > 1:
                 frequent_rents_points += 1
-            result += "\t" + each.get_title() + "\t" + format(this_amount, '.1f')  + "\n"
+            result += "\t" + each.title + "\t" + format(this_amount, '.1f')  + "\n"
 
             total_amount += this_amount
+        # add footer lines
         result += "Amount owed is " + str(total_amount) + "\n"
         result += "You earned " + str(frequent_rents_points) + " frequent renter points"
         return result

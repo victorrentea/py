@@ -1,7 +1,6 @@
 import unittest
 
-from videostore.video_store import Customer, Movie
-
+from video_store import Customer, Movie
 
 class CustomerTest(unittest.TestCase):
     def test_something(self):
