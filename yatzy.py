@@ -274,3 +274,5 @@ class YatziTest(unittest.TestCase):
         assert 18 == Yatzy(6, 2, 2, 2, 6).fullHouse()
         assert 0 == Yatzy(2, 3, 4, 5, 6).fullHouse()
 
+if __name__ == '__main__':
+    unittest.main()
