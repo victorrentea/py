@@ -2,40 +2,54 @@ import random
 import unittest
 
 def odds(list):
-    odds = []
-    # todo
+    '''self.assertEqual([1, 3, 5], odds([1, 2, 3, 4, 5]))'''
+    odds = [element for element in list if element % 2 == 1]
     print(odds)
     return odds
 
 def even_squared(list):
-    even_squared = []
-    # todo
+    even_squared = [element**2 for element in list if element % 2 == 0]
     print(even_squared)
     return even_squared
 
 def indexed_strings(list):
-    indexed = []
-    # todo
+    indexed = [f"{index}->{element}" for index,element in enumerate(list)]
     print(indexed)
     return indexed
 
 def sum_odds(list):
-    sum_odds = 0
-    # todo
+    sum_odds = sum(odds(list))
     print(sum_odds)
     return sum_odds
 
 def squared_by_index(list):
-    dict = {}
-    # todo
+    '''{0: 1, 1: 4, 2: 9, 3: 16}'''
+    dict = {index:e**2 for index,e in enumerate(list)}
+    # scris cu for ciobaesc:
+    # dict = {}
+    # for index, element in enumerate(list):
+    #     dict[index] = element**2
+
     print(dict)
     return dict
 
-# "fizz" if n|3, "buzz" if n|5, "fizz buzz" if n|15, n as string otherwise
+# "fizz" if n|3, "buzz" if n|5, "fizz buzz" if n|3 and n|5, n as string otherwise
 def fizz_buzz(n):
-    fizz_buzz=[]
-    # todo
-    return fizz_buzz
+    # fizz_buzz=[]
+    # for i in range(1,n+1):
+    #     fizz_buzz.append(fizz_buzz_gen(i))
+    # return fizz_buzz
+    return [fizz_buzz_gen(i) for i in range(1,n+1)]
+
+def fizz_buzz_gen(i):
+    if i % 3 == 0 and i % 5 == 0:
+        return "fizz buzz"
+    elif i % 3 == 0:
+        return "fizz"
+    elif i % 5 == 0:
+        return "buzz"
+    else:
+        return str(i)
 
 class Tests(unittest.TestCase):
 
@@ -57,7 +71,7 @@ class Tests(unittest.TestCase):
     def test_fizz_buzz(self):
         self.assertEqual([
             "1", "2", "fizz", "4", "buzz", "fizz", "7", "8", "fizz", "buzz",
-            11, "fizz", 13, 14, "fizz buzz"], fizz_buzz(15))
+            "11", "fizz", "13", "14", "fizz buzz"], fizz_buzz(15))
     # todo write a unit test then implement the following functionality
     #  double_odds(list) returns a list with the odd elements, doubled.
 

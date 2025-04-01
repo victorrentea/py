@@ -1,6 +1,17 @@
-dict = {"kafka_servers": "localhost:9092","kafka_topic":"topic"}
 
-# print(dict)
+from enum import Enum
 
-for key, value in dict.items():
-    print(f"{key}: {value}")
+
+class JobStatus(Enum):
+    PENDING = 1
+    RUNNING = 2
+    SUCCESS = 3
+    FAILURE = 4
+    CANCELLED = 5
+
+def param_cu_or(p:JobStatus=None):
+    print (p or "default val")
+
+
+param_cu_or(JobStatus.SUCCESS)
+param_cu_or()

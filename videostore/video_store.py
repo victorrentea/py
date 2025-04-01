@@ -63,7 +63,6 @@ class Customer:
         # for rental in self.rentals_list:
         #     frequent_rents_points += rental.compute_points()
         # return frequent_rents_points
-
         return sum(rental.compute_points() for rental in self.rentals_list)
 
     def compute_total_amount(self):

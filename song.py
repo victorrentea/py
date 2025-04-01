@@ -1,12 +1,19 @@
-song = """There was an old lady who swallowed a fly.
-I don't know why she swallowed a fly - perhaps she'll die!
+def swallow(what:str):
+    return f"There was an old lady who swallowed a {what}"
+perhaps_die="""I don't know why she swallowed a fly - perhaps she'll die!
 
-There was an old lady who swallowed a spider;
-That wriggled and wiggled and tickled inside her.
+"""
+song = (
+    swallow("fly")+
+    ".\n"+
+    perhaps_die +
+    swallow("spider")+
+    ";\n"+
+    """That wriggled and wiggled and tickled inside her.
 She swallowed the spider to catch the fly;
-I don't know why she swallowed a fly - perhaps she'll die!
-
-There was an old lady who swallowed a bird;
+"""+
+perhaps_die
++swallow("bird")+""";
 How absurd to swallow a bird.
 She swallowed the bird to catch the spider,
 She swallowed the spider to catch the fly;
@@ -37,7 +44,12 @@ She swallowed the spider to catch the fly;
 I don't know why she swallowed a fly - perhaps she'll die!
 
 There was an old lady who swallowed a horse...
-...She's dead, of course!"""
+...She's dead, of course!""")
+
+# extrageti repetitia cu for sa generati poezia din cod
+
+# vreau schiband doar 1-3 linie sa putem extinde poezia cu inca 1 strofa cu un alt animal
+
 
 print(song)
 
