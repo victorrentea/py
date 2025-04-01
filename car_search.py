@@ -7,6 +7,7 @@ def filter_car_models(criteria, car_models):
     print("Pretend: more filtering logic ...")
     return matches
 
+# TODO adding (*, to the signature makes params mandatory
 def intervals_intersect(start1, end1, start2, end2):
     return start1 <= end2 and start2 <= end1
 
@@ -35,11 +36,6 @@ class CarModel:
     def __str__(self):
         return f"CarModel{{make='{self.make}', model='{self.model}'}}"
 
-
-
-class Alta:
-    def apply_capacity_filter(self):
-        print(intervals_intersect(1000, 1600, 1250, 2000))
 
 
 def to_dto(car_model):
