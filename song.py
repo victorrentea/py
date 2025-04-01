@@ -92,7 +92,7 @@ class SongTest(unittest.TestCase):
 
         There was an old lady who swallowed a horse...
         ...She's dead, of course!"""
-
+        self.maxDiff = 10000000
         self.assertEqual(dedent(song_ref).strip(), song)
 
 if __name__ == '__main__':

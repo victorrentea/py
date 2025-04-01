@@ -2,8 +2,7 @@ import random
 import unittest
 
 def odds(list):
-    odds = []
-    # todo
+    odds = [element for element in list if element % 2 == 1]
     print(odds)
     return odds
 
@@ -28,6 +27,8 @@ def sum_odds(list):
 def squared_by_index(list):
     dict = {}
     # todo
+    # for index,element in enumerate(list):
+    #     ..
     print(dict)
     return dict
 
@@ -62,4 +63,8 @@ class Tests(unittest.TestCase):
     #  double_odds(list) returns a list with the odd elements, doubled.
 
 if __name__ == '__main__':
+    list = ['a','b']
+    print(" ".join(list))
+
     unittest.main()
+
