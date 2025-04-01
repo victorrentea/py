@@ -46,7 +46,7 @@ class Tests(unittest.TestCase):
         self.assertEqual([4, 16], even_squared([1, 2, 3, 4]))
 
     def test_indexed_strings(self):
-        self.assertEqual(["0->5", "1->6", "2->7"], indexed_strings([5,6,7]))
+        self.assertEqual(["0->1", "1->2", "2->7"], indexed_strings([1,2,7]))
 
     def test_sum_odds(self):
         self.assertEqual(4, sum_odds([1, 2, 3, 4]))
