@@ -1,14 +1,14 @@
 import unittest
 
-from videostore.video_store import Customer, Movie
+from video_store import Customer, Movie, PriceCode, Rental
 
 
 class CustomerTest(unittest.TestCase):
     def test_something(self):
         customer = Customer("John Doe")
-        customer.add_rental(Movie("Star Wars", Movie.NEW_RELEASE), 6)
-        customer.add_rental(Movie("Sofia", Movie.CHILDRENS), 7)
-        customer.add_rental(Movie("Inception", Movie.REGULAR), 5)
+        customer.add_rental(Rental(Movie("Star Wars", PriceCode.NEW_RELEASE), 6))
+        customer.add_rental(Rental(Movie("Sofia", PriceCode.CHILDREN), 7))
+        customer.add_rental(Rental(Movie("Inception", PriceCode.REGULAR), 5))
 
         expected = "Rental Record for John Doe\n" \
                    + "\tStar Wars\t18.0\n" \

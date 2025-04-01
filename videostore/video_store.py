@@ -1,57 +1,79 @@
 from collections import OrderedDict
+from dataclasses import dataclass
+from enum import Enum
+from typing import List
+
+class PriceCode(Enum):
+    CHILDREN = 2
+    NEW_RELEASE = 1
+    REGULAR = 0
 
 class Movie:
-    CHILDRENS = 2
-    REGULAR = 0
-    NEW_RELEASE = 1
-    def __init__(self, title, price_code):
-        self._title = title
-        self._price_code = price_code
-
-    def get_price_code(self):
-        return self._price_code
-
-    def set_price_code(self, arg):
-        self._price_code = arg
-
-    def get_title(self):
-        return self._title
-
+    def __init__(self, title:str, price_code:PriceCode):
+        self.title = title
+        self.price_code = price_code
+@dataclass
+class Rental:
+    movie:Movie
+    days_rented:int
+    
+    def compute_amount(self):
+        this_amount = 0
+        if self.movie.price_code == PriceCode.REGULAR:
+            this_amount += 2
+            if self.days_rented > 2:
+                this_amount += (self.days_rented - 2) * 1.5
+        elif self.movie.price_code == PriceCode.NEW_RELEASE:
+            this_amount += self.days_rented * 3
+        elif self.movie.price_code == PriceCode.CHILDREN:
+            this_amount += 1.5
+            if self.days_rented > 3:
+                this_amount += (self.days_rented - 3) * 1.5
+        return this_amount
+    
+    def compute_points(self):
+        frequent_rents_points = 1
+        if (self.movie.price_code == PriceCode.NEW_RELEASE) and self.days_rented > 1:
+            frequent_rents_points += 1
+        return frequent_rents_points
 
 class Customer:
     def __init__(self, name):
         self.name = name
-        self.rentals = OrderedDict()
+        self.rentals_list:List[Rental]=[] # contine Rental
 
-    def add_rental(self, m, d):
-        self.rentals[m] = d
-
-    def get_name(self):
-        return self.name
+    def add_rental(self, rental:Rental):
+        self.rentals_list.append(rental)
 
     def statement(self):
-        total_amount = 0
-        frequent_rents_points = 0
-        result = "Rental Record for " + self.get_name() + "\n"
-        for each in self.rentals.keys():
-            this_amount = 0
-            dr = self.rentals[each]
-            if each.get_price_code() == Movie.REGULAR:
-                this_amount += 2
-                if dr > 2:
-                    this_amount += (dr - 2) * 1.5
-            elif each.get_price_code() == Movie.NEW_RELEASE:
-                this_amount += dr * 3
-            elif each.get_price_code() == Movie.CHILDRENS:
-                this_amount += 1.5
-                if dr > 3:
-                    this_amount += (dr - 3) * 1.5
-            frequent_rents_points += 1
-            if (each.get_price_code() == Movie.NEW_RELEASE) and dr > 1:
-                frequent_rents_points += 1
-            result += "\t" + each.get_title() + "\t" + format(this_amount, '.1f')  + "\n"
+        # header
+        result = "Rental Record for " + self.name + "\n"
 
-            total_amount += this_amount
-        result += "Amount owed is " + str(total_amount) + "\n"
-        result += "You earned " + str(frequent_rents_points) + " frequent renter points"
+        # body
+        for rental in self.rentals_list:
+            result += "\t" + rental.movie.title + "\t" + format(rental.compute_amount(), '.1f')  + "\n"
+
+        # footer
+        result += f"Amount owed is {self.compute_total_amount()}\n"
+        result += f"You earned {self.compute_total_points()} frequent renter points"
         return result
+
+    def compute_total_points(self):
+        # frequent_rents_points = 0
+        # for rental in self.rentals_list:
+        #     frequent_rents_points += rental.compute_points()
+        # return frequent_rents_points
+
+        return sum(rental.compute_points() for rental in self.rentals_list)
+
+    def compute_total_amount(self):
+        # total_amount = 0
+        # for rental in self.rentals_list:
+        #     total_amount += rental.compute_amount()
+        # return total_amount
+        
+        return sum(rental.compute_amount() for rental in self.rentals_list)
+
+
+
+   
