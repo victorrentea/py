@@ -20,7 +20,7 @@ def play_game(game, seed):
     game.add('Sue')
 
     while True:
-        game.roll(random.randint(1,6))
+        game.roll_a_die(random.randint(1, 6))
 
         if random.randint(1, 9) == 7:
             not_a_winner = game.wrong_answer()

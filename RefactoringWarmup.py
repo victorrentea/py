@@ -47,13 +47,10 @@ class Two:
 
 def loop():
     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    ssq = 0
-    for number in numbers:
-        if number % 2 == 0:
-            ssq += number * number
-    print(sqrt(ssq))
+    sum_of_squares_of_even_numbers = sum(n ** 2 for n in numbers if n % 2 == 0)
+    print(sqrt(sum(n ** 2 for n in numbers if n % 2 == 0)))
 
 
 if __name__ == "__main__":
-    print(One(Two()).f())
+    # print(One(Two()).f())
     loop()

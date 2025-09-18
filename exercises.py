@@ -7,13 +7,15 @@ def odds(list):
     return odds
 
 def even_squared(list):
-    even_squared = []
+    even_squared = [element ** 2 for element in list if element % 2 == 0]
     # todo
     print(even_squared)
     return even_squared
 
 def indexed_strings(list):
-    indexed = []
+    # [1,2,7]
+    # ["0->1", "1->2", "2->7"]
+    indexed = [f"{index}->{element}" for index,element in enumerate(list)]
     # todo
     print(indexed)
     return indexed
@@ -25,7 +27,9 @@ def sum_odds(list):
     return sum_odds
 
 def squared_by_index(list):
-    dict = {}
+    # [1,2,3,4]
+    # {0: 1, 1: 4, 2: 9, 3: 16}
+    dict = {index:element**2 for index,element in enumerate(list) }
     # todo
     # for index,element in enumerate(list):
     #     ..
@@ -33,10 +37,22 @@ def squared_by_index(list):
     return dict
 
 # "fizz" if n|3, "buzz" if n|5, "fizz buzz" if n|15, n as string otherwise
+# CR: "if n|7 => append wizz with the proper space"
+# 35 -> "buzz wizz"
+# 7 -> "wizz"
+# 3*5*7 -> "fizz buzz wizz"
 def fizz_buzz(n):
-    fizz_buzz=[]
-    # todo
-    return fizz_buzz
+    return [translate(n) for n in range(1, n + 1)]
+
+def translate(n):
+    tokens = []
+    if n%3==0: tokens.append("fizz")
+    if n%5==0: tokens.append("buzz")
+    if n%7==0: tokens.append("wizz")
+
+    return " ".join(tokens) if tokens else f"{n}"
+
+
 
 class Tests(unittest.TestCase):
 
@@ -57,8 +73,8 @@ class Tests(unittest.TestCase):
 
     def test_fizz_buzz(self):
         self.assertEqual([
-            "1", "2", "fizz", "4", "buzz", "fizz", "7", "8", "fizz", "buzz",
-            11, "fizz", 13, 14, "fizz buzz"], fizz_buzz(15))
+            "1", "2", "fizz", "4", "buzz", "fizz", "wizz", "8", "fizz", "buzz",
+            "11", "fizz", "13", "wizz", "fizz buzz"], fizz_buzz(15))
     # todo write a unit test then implement the following functionality
     #  double_odds(list) returns a list with the odd elements, doubled.
 
