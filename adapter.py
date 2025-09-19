@@ -41,15 +41,24 @@ class LdapApi:
         return []
 
 
+@dataclass
+class User:
+    full_name: str
+    email: str
+    username: str
+
+
+# business logicul tau- cea mai complexa parte din codul tau
+# cerinte de la stakeholderi
 class NotificationService:
-    def __init__(self, email_sender: EmailSender, ldap_api: LdapApi):
+    def __init__(self, email_sender: EmailSender, userApiAdapter: LdapUserApiClientAdapter):
         self.email_sender = email_sender
-        self.ldap_api = ldap_api
+        self.userApiAdapter = userApiAdapter
 
+    # aici in zona de business rules ar trebui sa fie codul CEL MAI CURAT
     def send_welcome_email(self, customer: Customer, username_part: str):
-        ldap_user_dto = self.fetch_user_from_ldap(username_part)
+        user = userApiAdapter.fetch_user(username_part)
 
-        full_name = f"{ldap_user_dto.fname} {ldap_user_dto.lname.upper()}"
         can_return_orders = customer.gold_member or not customer.legal_entity_code
 
         email = Email(
@@ -59,26 +68,38 @@ class NotificationService:
             body=(
                 f"Welcome {customer.name}!\n"
                 f"Remember: you {'can' if can_return_orders else 'cannot'} return orders.\n"
-                f"Sincerely,\n{full_name}"
+                f"Sincerely,\n{user.full_name}"
             )
         )
 
-        if ldap_user_dto.work_email:
-            contact = f"{full_name} <{ldap_user_dto.work_email.lower()}>"
+        if user.email:
+            contact = f"{user.full_name} <{user.email.lower()}>"
             email.cc.append(contact)
 
         self.email_sender.send_email(email)
 
-        self.normalize(ldap_user_dto)
-        customer.created_by_username = ldap_user_dto.un
+        customer.created_by_username = user.username
 
-    def fetch_user_from_ldap(self, username_part: str) -> LdapUserDto:
+
+# class Controller:#
+class LdapUserApiClientAdapter:  # Adapter Pattern ®️
+    def fetch_user(self, username_part: str) -> User:
+        # external 💩
+        # retries, authorization, error handling, monitoring their call time
         dto_list = self.ldap_api.search_using_get(username_part.upper(), None, None)
         if len(dto_list) != 1:
             raise ValueError(
                 f"Search for username='{username_part}' did not return a single result: {dto_list}"
             )
-        return dto_list[0]
+        ldap_user_dto = dto_list[0]
+
+        return self.map_from_their_dto_to_my_object(ldap_user_dto)
+
+    def map_from_their_dto_to_my_object(self, ldap_user_dto) -> User:
+        full_name = f"{ldap_user_dto.fname} {ldap_user_dto.lname.upper()}"
+        self.normalize(ldap_user_dto)
+
+        return User(full_name, ldap_user_dto.work_email, ldap_user_dto.un)
 
     def normalize(self, ldap_user_dto: LdapUserDto):
         if ldap_user_dto.un.startswith("s"):

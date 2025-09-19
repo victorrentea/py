@@ -19,6 +19,7 @@ class Customer:
     def __init__(self, name):
         self.name = name
         self.rentals = OrderedDict()
+        # self.a = list[Rental]()
 
     def add_rental(self, m, d):
         self.rentals[m] = d
@@ -67,6 +68,8 @@ class CustomerTest(unittest.TestCase):
         customer.add_rental(Movie("Sofia", Movie.CHILDRENS), 7)
         customer.add_rental(Movie("Inception", Movie.REGULAR), 5)
 
+
+en
         expected = "Rental Record for John Doe\n" \
                    + "\tStar Wars\t18.0\n" \
                    + "\tSofia\t7.5\n" \
