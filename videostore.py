@@ -69,7 +69,6 @@ class CustomerTest(unittest.TestCase):
         customer.add_rental(Movie("Inception", Movie.REGULAR), 5)
 
 
-en
         expected = "Rental Record for John Doe\n" \
                    + "\tStar Wars\t18.0\n" \
                    + "\tSofia\t7.5\n" \
