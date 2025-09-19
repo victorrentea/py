@@ -10,6 +10,10 @@ class Task:
         return f'Task(id={self.id}, started={self.started})'
 
 
+# apply_capacity_filter(Interval(1000, 1600));
+# apply_capacity_filter("");
+
+
 def boss_level(fluff, tasks, cr323):
     index = 0
     j = len(tasks)

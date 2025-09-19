@@ -4,8 +4,7 @@ from gc import freeze
 class CarSearchCriteria:  # = DTO vine ca JSON pe POST /search
     def __init__(self, start_year, end_year, make):
         self.make = make
-        if start_year > end_year:
-            raise ValueError("Start year is larger than end year.")
+
         self.start_year = start_year
         self.end_year = end_year
         self.year_interval = Interval(start_year, end_year)
@@ -53,6 +52,10 @@ class Interval:
     start: int
     end: int
 
+    # def __init__(self, start, end):
+    #     if start_year > end_year:
+    #         raise ValueError("Start year is larger than end year.")
+
     # am facut OOP: am pus logica LANGA date, daca lucra doar cu datele claise asteia !
     def intersects(self: Interval, other: Interval):
         # self.start += 1 nu mai merge
@@ -62,10 +65,19 @@ class Interval:
         return self.end - self.start
 
 
-def apply_capacity_filter():
-    print(intervals_intersect(1000, 1600, 1250, 2000))
+def apply_capacity_filter(i: Interval):
+    print(i.intersects(Interval(1250, 2000)))
 
 
+pr = [p for p in range(2, n + 1) if all(p % q for q in range(2, int(p ** 0.5) + 1))]
+
+
+def f():
+    x = 1
+    print("halo")
+    return 1
+    print("halo")
+    
 
 def to_dto(car_model):
     dto = CarModelDTO()
