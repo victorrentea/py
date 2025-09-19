@@ -3,14 +3,12 @@ from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 
-
 class Country(Enum):
     UK = "UK"
     CN = "CN"
     FR = "FR"
     ES = "ES"
     RO = "RO"
-
 
 @dataclass(frozen=True)
 class Parcel:
@@ -20,6 +18,8 @@ class Parcel:
     date: date
 
 
+# Strategy = o interfata care defineste o problema de rezolvat
+# cu multe implementari ca moduri diferite de a rezolva acea problema
 class TaxCalculator:
     def calculate(self, parcel: Parcel) -> float:
         raise NotImplementedError
@@ -41,14 +41,12 @@ class UKCustomsTaxCalculator(TaxCalculator):
         # 100+ linii in 7 metode
         return parcel.tobacco_value / 2 + parcel.regular_value
 
-
-
 def calculate_customs_tax(parcel: Parcel) -> float:
     calculator = select_tax_calculator(parcel.origin_country)
     return calculator.calculate(parcel)
 
 
-# factory method
+# factory method care-ti intoarce o subclasa oarecare in fct de country
 def select_tax_calculator(country: Country) -> TaxCalculator:
     match country:
         case Country.UK:
